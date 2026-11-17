@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>SPACE WORM</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="spaceBg"></canvas>
+
+<header class="top">
+    <div class="logo">Space Worm</div>
+    <div class="controls">
+        <button id="restartBtn" class="btn" aria-label="Novo jogo"><span class="long">Novo</span><span class="short"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span></button>
+        <button id="pauseBtn" class="btn" aria-label="Pausa"><span class="long">Pausa</span><span class="short"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M8 5v14"/><path d="M16 5v14"/></svg></span></button>
+        <button id="settingsBtn" class="btn" aria-haspopup="dialog" aria-label="Ajustes"><span class="long">Ajustes</span><span class="short"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span></button>
+    </div>
+</header>
+
+<main class="stage">
+    <div class="game">
+        <div class="scorebar">
+            <div class="stat"><span class="lbl">Pontos</span><span class="val" id="score">0</span></div>
+            <div class="stat right"><span class="lbl">Melhor</span><span class="val" id="best">0</span></div>
+        </div>
+        <div class="board-wrap" id="boardWrap">
+            <canvas id="board" width="180" height="180"></canvas>
+            <div class="overlay" id="overlay">
+                <div class="dialog">
+                    <h2 id="ovTitle">SPACE WORM</h2>
+                    <p id="ovText">Devore planetas, estrelas e naves. Cresça.</p>
+                    <div class="final hidden" id="ovFinal">
+                        <div><span>PONTOS</span><strong id="fScore">0</strong></div>
+                        <div><span>MELHOR</span><strong id="fBest">0</strong></div>
+                        <div><span>TAMANHO</span><strong id="fLen">3</strong></div>
+                        <div><span>COMBO</span><strong id="fCombo">0</strong></div>
+                    </div>
+                    <p class="touch-hint">Deslize para virar · Segure DASH para acelerar</p>
+                    <button class="play" id="startBtn">Jogar</button>
+                </div>
+            </div>
+        </div>
+        <div class="meter">
+            <div class="meter-head">
+                <span id="meterLabel">TAMANHO 3</span>
+                <span id="comboMult">1× PONTOS</span>
+            </div>
+            <div class="meter-bars">
+                <div class="sub-meter">
+                    <div class="sub-head"><span class="badge" id="comboBadge">COMBO</span></div>
+                    <div class="bar"><i id="meterFill"></i></div>
+                </div>
+                <div class="sub-meter">
+                    <div class="sub-head"><span class="badge dash-on" id="dashBadge">DASH</span></div>
+                    <div class="bar dash" id="dashBar"><i id="dashFill"></i></div>
+                </div>
+            </div>
+        </div>
+        <button class="touch-dash-bar" id="touchDashBtn" aria-label="Segurar Dash">SEGURE · DASH</button>
+        <div class="touchpad" id="touchpad">
+            <div class="dpad">
+                <button class="tpb" data-act="up" aria-label="Cima">▲</button>
+                <button class="tpb" data-act="left" aria-label="Esquerda">◀</button>
+                <button class="tpb" data-act="down" aria-label="Baixo">▼</button>
+                <button class="tpb" data-act="right" aria-label="Direita">▶</button>
+            </div>
+            <button class="tpb-dash" data-act="dash" aria-label="Dash">DASH</button>
+        </div>
+    </div>
+</main>
+
+<div class="modal hidden" id="settings" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="sheet">
+        <div class="sheet-head"><h2 id="setTitle">Ajustes</h2><button id="closeSettings" class="btn" aria-label="Fechar">✕</button></div>
+        <h3>Geral</h3>
+        <label class="row"><span>Tremor<i class="info" tabindex="0" data-tip="A tela balança de leve ao destruir planetas e ao bater.">i</i></span><input type="checkbox" class="switch" id="optShake"></label>
+        <label class="row"><span>Efeitos<i class="info" tabindex="0" data-tip="Destroços, faíscas térmicas, rastro do dash, meteoros, nebulosas e estrelas.">i</i></span><input type="checkbox" class="switch" id="optFx"></label>
+        <label class="row"><span>Hitstop<i class="info" tabindex="0" data-tip="Pausa breve de impacto ao destruir planetas, estrelas e naves.">i</i></span><input type="checkbox" class="switch" id="optHit"></label>
+        <label class="row"><span>Som<i class="info" tabindex="0" data-tip="Liga ou desliga os efeitos sonoros.">i</i></span><input type="checkbox" class="switch" id="optSound"></label>
+        <label class="row"><span>Música<i class="info" tabindex="0" data-tip="Trilha sonora espacial discreta que acompanha seus pontos e combos.">i</i></span><input type="checkbox" class="switch" id="optMusic"></label>
+        <label class="row touch-row"><span>Toque<i class="info" tabindex="0" data-tip="Controle por gestos na tela ou por botões.">i</i></span><select id="optTouch" class="sel" aria-label="Toque"><option value="gestures">Gestos</option><option value="buttons">Botões</option></select></label>
+        <h3>Controles</h3>
+        <div class="kl kb-only">
+            <div class="krow"><span>Mover</span><span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd></span></div>
+            <div class="krow"><span>Mover (alt.)</span><span><kbd>A</kbd><kbd>W</kbd><kbd>S</kbd><kbd>D</kbd></span></div>
+            <div class="krow"><span>Dash (até 1s)</span><span><kbd>Espaço</kbd></span></div>
+            <div class="krow"><span>Pausa</span><span><kbd>P</kbd></span></div>
+            <div class="krow"><span>Novo</span><span><kbd>F2</kbd></span></div>
+            <div class="krow"><span>Som</span><span><kbd>M</kbd></span></div>
+            <div class="krow"><span>Ajustes</span><span><kbd>O</kbd></span></div>
+        </div>
+        <div class="touch-only">Deslize em qualquer direção para virar e segure DASH para acelerar</div>
+    </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
